@@ -8,17 +8,19 @@ import sys
 
 repo_root_dir = pathlib.Path(__file__).parent.absolute()
 
-dirs_to_format = ["lab", "my_libs", "lasertag"]
+dirs_to_format = ["lab", "drivers", "lasertag"]
 extensions_to_format = [".c", ".h"]
 
 dirs_to_exclude = [
     "build/",
+    "build_emu",
     "platforms/hw/",
     "platforms/zybo/xil_arm_toolchain/bsp",
     "lasertag/sounds",
     "old_digilent_files_solns",
     "student",
     "student_repo",
+    "instructor/code_obfuscation",
 ]
 
 
@@ -73,7 +75,7 @@ def main():
                 diff_cmd = [
                     "/bin/bash",
                     "-c",
-                    "diff -u <(cat " + str(f) + ") <(clang-format " + str(f) + ")",
+                    "diff -u <(cat " + str(f) + ") <(clang-format-6.0 " + str(f) + ")",
                 ]
                 p = subprocess.Popen(diff_cmd, stdout=subprocess.PIPE)
                 stdout = p.communicate()[0]
@@ -85,7 +87,7 @@ def main():
                         sys.exit(1)
                     print("Formatting", f.relative_to(repo_root_dir))
 
-                    cmd = ["clang-format", "-i", "-style=LLVM", f]
+                    cmd = ["clang-format-6.0", "-i", "-style=LLVM", f]
                     subprocess.run(cmd)
 
                     num_formatted += 1
